@@ -1,20 +1,18 @@
 const express = require("express");
 const PORT = process.env.PORT || 8080;
 const app = express();
-
+const logger = require('morgan');
 app.use(express.static(__dirname + "/first-app/build"));
 
-app.use((req, res, next) => {
-  console.log(req.url, req.method);
-  next();
-});
 
-const sayHello = function(req, res) {
-  res.send({ message: "Welcome to the page" });
-};
+let count =  0;
 
-app.get("/get_data", (req, res) => {
-  res.send({ data: "Welcome To This Page" });
-});
+const sendIncreasedCount =function(req,res){
+  count = count+1;
+  res.send({count});
+}
+app.use(logger("dev"));
+
+app.get("/increase_count",sendIncreasedCount);
 
 app.listen(PORT, () => console.log("listening at port", PORT));
